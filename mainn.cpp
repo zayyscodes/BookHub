@@ -51,6 +51,7 @@ int main(){
 	drama();
 	pause(1);	
 	
+	
 	//game
 	for (int x=0; x<rounds; x++){ // for rounds
 		for (int i=0; i<2; i++){ // for each player's turn
@@ -83,7 +84,6 @@ int main(){
 			hangman(word, genre, turn);
 		}
 	}
-	return 0;
 }
 
 void hangman(string word, string genre, bool turn){
@@ -91,6 +91,7 @@ void hangman(string word, string genre, bool turn){
 	char alphabets[26];
 	int chances=5;
 	const char* w1=word;
+	
 	if (turn==false){
 		//p2 is guessing
 		for (char &c : word) {
@@ -121,33 +122,57 @@ void hangman(string word, string genre, bool turn){
         
         cout << "Your time begins now: " << endl;
         auto startTime = chrono::high_resolution_clock::now();
+        
         do{
-        	bool found=false;
-        	bool ffound=false;
+        	again:
+        	bool found=false; //for letter in string
+        	bool ffound=false; //for complete string
+        	bool used=false; //for used letter
         	int drawman=0;
         	draw(drawman);
+        	
+        	//print _
 	        for (int i=0; i<length; i++)
 	        	cout << empty[i] << " ";
 	        cout << "Tries remaining: " << chances;
+	        
+	        //take guess
 	        cout << "Enter guess: ";
 	        fflush(stdin);
 	        cin >> guess;
+	        
+	        //check if guess has been made
+	        for (int i=0; i<26; i++){
+	        	if (guess==alphabets[i]){
+	        		cout << "Letter has already been guessed." << endl;
+	        		used=true;
+	        		break;
+				}
+			}
+			 //if yes, then take input again without any change
+			if(used){
+				goto again;
+			}
+			
+			//check if guessed letter is in the word
 	        for(int i=0; i<length; i++){
 	        	if (guess==arr[i]){
 	        		empty[i]=guess;
 	        		found=true;
 				}
-			} //end find guess
+			}
+			
+			//if not found, reduce chances and time
 			if (!found){
 				chances--;
 				auto endTime-=chrono::seconds(10);
 				auto currentTime = chrono::high_resolution_clock::now();
     			auto elapsedTime = chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();
 
-			} else if (found){
+			} else if (found){ // if found
 				for(int i=0; i<length; i++){
 	        		if (empty[i]=='_'){
-	        			bool x=0;
+	        			bool x=0; //to check is complete word has been guessed
 	        			break;
 					}
 				} 
@@ -156,7 +181,6 @@ void hangman(string word, string genre, bool turn){
 				else if(x)
 					ffound=true;
 			}
-			
 	    } while (chances>=0 || ffound==true || elapsedTime > 0);
 	    
 	}
