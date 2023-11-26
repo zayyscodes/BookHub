@@ -7,12 +7,14 @@
 #include<cstdlib>
 #include<fstream> // filing
 #include<queue> // for queue procedures
+#include<conio.h> // for password; window getch()
 #include <windows.h> // to open website
 #include <stdlib.h>
 #include"book.h" // book class declared
 #include"customer.h" // customer class declared
 #include"inventory.h" //inventory declard
 #include"node.h" // node for inventory declared
+#include"word.h"
 using namespace std;
 
 const int num = 50;
@@ -37,8 +39,9 @@ int main() {
     if (login == 1) {
     menu:
         system("CLS");
+        getwod(words, 23);
         customer cust;
-        cout << endl << endl << "MAIN MENU: ";
+        cout << endl << endl << "\t\t\t\t   M A I N   M E N U";
         cout << endl << "1, Order\n2, Search Book(s)\n3, Display Sorted\n4, Checkout\n5, Log Out";
         cout << endl << "Enter Choice: ";
         int choose;
@@ -371,5 +374,52 @@ int main() {
             break;
         } //end switch
     } // end user-based program
+    else if (login == 2) {
+    loginpw:
+    system("CLS");
+        string username;
+        char password[50];
+        const char correctpw[] = "dsproject";
+        bool user;
+        bool access = false;
+        cout << "\n\t\t\t\tENTER USER NAME:\n\t\t\t\t";
+        cin >> username;
+
+        cout << "\n\t\t\t\tENTER PASSWORD:\n\t\t\t\t";
+        int i = 0;
+        char ch;
+        while ((ch = _getch()) != '\r' && i < 49) { // Read characters until Enter (Enter has ASCII value of 13)
+            if (ch == '\b' && i > 0) { // Check for Backspace (ASCII value of 8)
+                cout << "\b \b"; // Move cursor back, erase last character, move cursor back again
+                i--;
+            }
+            else if (ch != '\b') {
+                password[i++] = ch;
+                cout << '*'; // Display * for each character
+            }
+        }
+        password[i] = '\0'; // Null-terminate the password string
+
+        if ((username == "ZahabJay" || username == "Zayys") && (std::strcmp(password, correctpw) == 0)) {
+            if (username == "ZahabJay")
+                user = true;
+            else if (username == "Zayys")
+                user = false;
+            access = true;
+        }
+        else {
+            cout << "\n\t\t\t\tIncorrect Username or Password." << endl;
+            pause(2);
+            goto logIN;
+        }
+
+        if (access) {
+            cout << "\n\t\t\t\tAccess granted!" << endl;
+            if (user)
+                cout << "\n\t\t\t  Welcome back, Zahab!" << endl;
+            else if (!user)
+                cout << "\n\t\t\t  Welcome back, Zehra!" << endl;
+        }
+    }
 
 }
