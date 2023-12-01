@@ -3,6 +3,7 @@
 using namespace std;
 
 void pause(int x);
+void header();
 
 class book {
 public:

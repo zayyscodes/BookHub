@@ -13,9 +13,9 @@
 #include <stdlib.h>
 using namespace std;
 
-Node::Node() :next(NULL), sno(0) {}
-Node::Node(book b) :b(b), next(NULL) {
-    sno = counter++;
-}
+Node::Node() : next(NULL) {}
+Node::Node(book b) : b(b), next(NULL) {}
 
-int Node::counter = 1;
+void Node::setsno(int counter) {
+	sno = counter;
+}

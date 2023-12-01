@@ -22,7 +22,7 @@ struct wod words[numw] = {
 	{"Hamartia", "huh' murr' tee' ah'", "n.", "Greek", "a fatal flaw leading to the downfall of a tragic hero or heroine."},
 	{"Bibliolater", "bib' lee' oh' lay' tuh'", "n.", "Greek", "a person who is passionately enthusiastic about books."},
 	{"Librocubicularist", "leh' bro' ku' bee' kuh' lay' riz'", "n.", "Latin", "(rare) someone who reads in bed."},
-	{"Shelfrighteous", "shelf' rai' chas'", "adj.", "English", "a feeling of superiority about one’s bookshelf."},
+	{"Shelfrighteous", "shelf' rai' chas'", "adj.", "English", "a feeling of superiority about ones bookshelf."},
 	{"Scrollmate", "skrol' met'", "n.", "English", "an author the reader feels a deep connection with."},
 	{"Readultery", "ree' dal' ta' ri'", "n.", "English", "the act of being unfaithful to one book by reading another simultaneously."},
 	{"Sentranced", "sen' transt'", "adj.", "English", "the state of being captivated by a well-written sentence."},
@@ -52,7 +52,7 @@ void getwod(struct wod arr[], int i) {
 	srand(static_cast<unsigned int>(time(0)));
 	sort(arr, arr + i, compareByWord); // Sort the 'arr' array passed into the function, not 'words'
 	int x = generateRandomNumber(0, i - 1); // Adjust the range to prevent potential out-of-bounds access
-	cout << endl << "\t\t\t\tW O R D (s)  O F   T H E   D A Y" << endl;
+	cout << endl << "\n\t\t\t\t\tW O R D (s)  O F   T H E   D A Y" << endl;
 	cout << '\t' << arr[x].word << endl << '\t' << "(" << arr[x].pronun << ")" << endl;
 	cout << "  " << arr[x].nav << endl;
 	cout << '\t' << arr[x].def << endl;

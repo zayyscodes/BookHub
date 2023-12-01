@@ -17,10 +17,11 @@ using namespace std;
 
 const int num = 50;
 
-inventory::inventory() :head(NULL), tail(NULL) {}
+inventory::inventory() :head(NULL), tail(NULL), counter(0) {}
 
 void inventory::addbook(book b) {
     Node* n = new Node(b);
+    n->setsno(counter++);
     if (head == NULL) {
         head = n;
         tail = n;
@@ -33,6 +34,8 @@ void inventory::addbook(book b) {
 
 void inventory::addbook(Node* naya) {
     Node* n = naya;
+    counter++;
+    n->setsno(counter);
     if (head == NULL) {
         head = n;
         tail = n;
@@ -207,14 +210,13 @@ void inventory::searchauthor(string input, customer& cust) {
         if (temp->b.authorname == input) {
             Node* n = new Node(); // Create a new node for iauthor
             n->b = temp->b; // Copy the book details
-            n->sno = temp->sno; // Copy the sno directly
             iauthor.addbook(n); // Assuming addbook() adds a book to 'iauthor'
         }
         temp = temp->next;
     }
 
 getbookauthor:
-    system("CLS");
+    header();
     iauthor.display();
     int ch;
 
@@ -230,6 +232,7 @@ getbookauthor:
             cout << "No book found by " << input << endl;
             return;
         }
+
         while (temp2 != NULL) {
             if (temp2->sno == ch) {
                 iauthor.displaynode(temp2);
@@ -245,6 +248,7 @@ getbookauthor:
             cin >> choice;
             if (choice == 'y' || choice == 'Y') {
                 cust.cart(&(temp2->b));
+                pause(1);
             }
             else if (choice == 'N' || choice == 'n') {
                 goto getbookauthor;
@@ -257,7 +261,7 @@ getbookauthor:
             }
         }
         else {
-            cout << "book not available in specific genre." << endl;
+            cout << "Book not available by this specific author." << endl;
             goto getbookauthor;
         }
     }
@@ -273,14 +277,13 @@ void inventory::searchgenre(string input, customer& cust) {
         if (temp->b.genre == input) {
             Node* n = new Node(); // Create a new node for iauthor
             n->b = temp->b; // Copy the book details
-            n->sno = temp->sno; // Copy the sno directly
             igenre.addbook(n); // Assuming addbook() adds a book to 'iauthor'
         }
         temp = temp->next;
     }
 
 getbookgenre:
-    system("CLS");
+    header();
     igenre.display();
     int ch;
 
@@ -296,6 +299,7 @@ getbookgenre:
             cout << "No book found by " << input << endl;
             return;
         }
+
         while (temp2 != NULL) {
             if (temp2->sno == ch) {
                 igenre.displaynode(temp2);
@@ -311,6 +315,7 @@ getbookgenre:
             cin >> choice;
             if (choice == 'y' || choice == 'Y') {
                 cust.cart(&(temp2->b));
+                pause(1);
             }
             else if (choice == 'N' || choice == 'n') {
                 goto getbookgenre;
@@ -318,11 +323,12 @@ getbookgenre:
             else {
                 cout << "Invalid option, try again.";
                 pause(1);
+
                 goto choose;
             }
         }
         else {
-            cout << "book not available in specific genre." << endl;
+            cout << "Book not available by this specific author." << endl;
             goto getbookgenre;
         }
     }
@@ -333,7 +339,7 @@ void inventory::getbook(int pos) {
     for (int i = 0; i < pos - 1; i++) {
         temp = temp->next; //traverse to book
     }
-    system("CLS");
+    header();
     displaynode(temp);
 }
 
@@ -367,7 +373,7 @@ void inventory::display() {
 void inventory::displaynode(Node* n) {
     char ch;
     if (n == NULL) {
-        cout << endl << "Node is empty." << endl;
+        cout << endl << "Book doesn't exist." << endl;
         return;
     }
     n->b.display();

@@ -16,6 +16,12 @@ void pause(int x) {
     this_thread::sleep_for(chrono::seconds(x));
 }
 
+void header() {
+    system("CLS");
+    cout << endl << "\n\t\t\t\t\t-- T H E   B O O K   H U B --" << endl;
+    cout << "\t\t\t\t\t         E-bookstore" << endl << endl;
+}
+
 book::book() {}
 book::book(string n, string a, string g, int date, bool s, bool t, bool av, int avn, double pr, const char* web) :name(n), authorname(a), genre(g), publishdate(date), special(s), type(t), avail(av), price(pr) {
     url = new char[strlen(web) + 1];
@@ -93,6 +99,8 @@ void book::displayDate(int publishdate) {
 
 void book::display() {
     cout << endl << "Book Name: " << name;
+    if (special)
+        cout << " (special edition)";
     cout << endl << "Author: " << authorname;
     cout << endl << "Genre: " << genre;
     cout << endl << "Date of Publish: ";
@@ -100,11 +108,12 @@ void book::display() {
     cout << endl << "Type: " << (type ? "Paperback" : "Hardback");
     cout << endl << "Price: Rs." << price;
     cout << endl << "Available? " << (avail ? "Yes | Place Order" : "Out of Stock");
-    cout << endl << "No of Available copies: " << noofavail;
 }
 
 void book::displayorder() {
     cout << endl << "Book Name: " << name;
+    if (special)
+        cout << " (special edition)";
     cout << endl << "Author: " << authorname;
     cout << endl << "Genre: " << genre;
     cout << endl << "Date of Publish: ";

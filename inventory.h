@@ -19,6 +19,8 @@ class inventory { //linked list
 public:
     Node* head;
     Node* tail;
+    int counter;
+
     inventory();
 
     void addbook(book b);
