@@ -17,6 +17,10 @@
 #include"word.h"
 using namespace std;
 
+const int maxsize = 100;
+string arr[maxsize] = { "Due to fluctuation in exchange rates, the prices of the books might variate.", "\t\t\t\t\t NEW YEAR EVE Sale coming soon!", "Additional 10% discount on payment by card!" };
+
+
 void generateebill(customer& cust);
 void generatebill(customer& cust, int billno);
 void announcement();
@@ -76,7 +80,17 @@ logIN:
                     cin >> opt;
                     if (opt == 'Y' || opt == 'y') {
                         book* bookToAdd = i1.getbookfororder(ch);
-                        cust.cart(bookToAdd);
+                        int nob;
+                        cout << "How many copies? ";
+                        cin >> nob;
+                        int x = bookToAdd->ordered + nob;
+                        if (x <= bookToAdd->noofavail) {
+                            for (int i = 1; i <= nob; i++) {
+                                cust.cart(bookToAdd);
+                            }
+                        }
+                        else
+                            cout << "Book not added, insufficient stock." << endl;
                         pause(1);
                         goto opt1;
                     }
@@ -136,7 +150,15 @@ logIN:
                     cout << "Add book to cart? (Y/N) ";
                     cin >> o;
                     if (o == 'Y' || o == 'y') {
-                        cust.cart(&(n->b));
+                        int nob;
+                        cout << "How many copies? ";
+                        cin >> nob;
+                        int x = n->b.ordered + nob;
+                        if (x <= n->b.noofavail) {
+                            for (int i = 1; i <= nob; i++) {
+                                cust.cart(&(n->b));
+                            }
+                        }
                         pause(1);
                         goto menu;
                     }
@@ -253,8 +275,16 @@ logIN:
                 cin >> o;
                 if (o == 'Y' || o == 'y') {
                     book* bookToAdd = i1.getbookfororder(ch);
-                    if (bookToAdd) {
-                        cust.cart(bookToAdd);
+                    if (bookToAdd != NULL) {
+                        int nob;
+                        cout << "How many copies? ";
+                        cin >> nob;
+                        int x = bookToAdd->ordered + nob;
+                        if (x <= bookToAdd->noofavail) {
+                            for (int i = 1; i <= nob; i++) {
+                                cust.cart(bookToAdd);
+                            }
+                        }
                         pause(1);
                         goto menu;
                     }
@@ -281,8 +311,8 @@ logIN:
                 pause(1);
             }
             else {
-                cout << "\n\t\t\t\t\t** D I S P L A Y I N G   C A R T **" << endl << endl;
-                cust.displayOrder();
+                cout << "\n\t\t\t\t\t** D I S P L A Y I N G   C A R T **";
+                cust.displayCart();
                 cout << endl;
                 system("pause");
             }
@@ -385,6 +415,7 @@ logIN:
             goto menu;
             break;
         }
+
         case 7: {
         logout:
             header();
@@ -474,10 +505,33 @@ void generatebill(customer& cust, int billno) {
 }
 
 void announcement() {
-    string arr[] = { "Due to fluctuation in exchange rates, the prices of the books might variate.", "\t\t\t\t\t NEW YEAR EVE Sale coming soon!", "Additional 10% discount on payment by card!"};
-    int arrSize = sizeof(arr) / sizeof(arr[0]);
+    int arrSize = sizeof(arr) / sizeof(arr[]);
     srand(static_cast<unsigned int>(time(0)));
     int x = generateRandomNumber(0, arrSize - 1); // Adjust the range to prevent potential out-of-bounds access
     cout << endl << "\n\t\t\t\t\t   A N N O U N C E M E N T S" << endl;
     cout << arr[x];
+}
+
+void addString(const std::string& newann) {
+    int arrSize = sizeof(arr) / sizeof(arr[]);
+    if (arrSize >= maxsize) {
+        cout << "Announcement array is full. Cannot add more announcements." << endl;
+        return;
+    }
+    arr[arrSize++] = newann;
+}
+
+void writeToLogFile(const customer& cust) {
+    std::ofstream outputFile("customer_log.txt", std::ios::app); // Open file in append mode
+
+    if (outputFile.is_open()) {
+        // Write customer data to the file
+        outputFile << "ID: " << cust.id << ", Status: " << cust.status << "\n";
+        // Add more data as needed...
+
+        outputFile.close(); // Close the file after writing
+    }
+    else {
+        std::cerr << "Unable to open file for writing." << std::endl;
+    }
 }
