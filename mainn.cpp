@@ -17,10 +17,6 @@
 #include"word.h"
 using namespace std;
 
-const int maxsize = 100;
-string arr[maxsize] = { "Due to fluctuation in exchange rates, the prices of the books might variate.", "\t\t\t\t\t NEW YEAR EVE Sale coming soon!", "Additional 10% discount on payment by card!" };
-
-
 void generateebill(customer& cust);
 void generatebill(customer& cust, int billno);
 void announcement();
@@ -505,20 +501,12 @@ void generatebill(customer& cust, int billno) {
 }
 
 void announcement() {
-    int arrSize = sizeof(arr) / sizeof(arr[]);
+    string arr[] = { "Due to fluctuation in exchange rates, the prices of the books might variate.", "\t\t\t\t\t NEW YEAR EVE Sale coming soon!", "Additional 10% discount on payment by card!"};
+    int arrSize = sizeof(arr) / sizeof(arr[0]);
     srand(static_cast<unsigned int>(time(0)));
     int x = generateRandomNumber(0, arrSize - 1); // Adjust the range to prevent potential out-of-bounds access
     cout << endl << "\n\t\t\t\t\t   A N N O U N C E M E N T S" << endl;
     cout << arr[x];
-}
-
-void addString(const std::string& newann) {
-    int arrSize = sizeof(arr) / sizeof(arr[]);
-    if (arrSize >= maxsize) {
-        cout << "Announcement array is full. Cannot add more announcements." << endl;
-        return;
-    }
-    arr[arrSize++] = newann;
 }
 
 void writeToLogFile(const customer& cust) {

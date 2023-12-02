@@ -318,11 +318,11 @@ void customer::cart(book* newBook) {
                 newBook->editavail();
                 total = total + newBook->price;
                 cout << endl << "Book added to cart." << endl;
-                pause(2);
+                pause(1);
             }
             else {
                 cout << "Book not available for order." << endl;
-                pause(2);
+                pause(1);
             }
             bookExists = true;
             break; // No need to continue checking
@@ -334,7 +334,7 @@ void customer::cart(book* newBook) {
         ordered[booksInCart] = newBook;
         booksInCart = booksInCart + 1; // Increment booksInCart by 1
         cout << endl << "Book added to cart." << endl;
-        pause(2);
+        pause(1);
         total = total + newBook->price;
         newBook->setordered();
         newBook->editavail();
@@ -354,6 +354,121 @@ void customer::displayOrder() {
     if (!paymet) {
         finaltotal = finaltotal - (finaltotal * 0.1);
         cout << endl << "After 'Card Discount' : Rs." << fixed << setprecision(2) << finaltotal << endl;
+    }
+}
+
+void customer::displayCart() {
+startdisp:
+    cout << endl << endl << "-----------------------------------------" << endl;
+    for (int i = 0; i < booksInCart; i++) {
+        cout << endl << i + 1 << ")";
+        ordered[i]->displayorder();
+        cout << endl;
+    }
+    cout << endl << "-----------------------------------------" << endl;
+    cout << "Total: Rs." << fixed << setprecision(2) << total;
+    finaltotal = (total * GST) + total;
+    cout << endl << "Total after GST: Rs." << fixed << setprecision(2) << finaltotal << endl;
+    if (!paymet) {
+        finaltotal = finaltotal - (finaltotal * 0.1);
+        cout << endl << "After 'Card Discount' : Rs." << fixed << setprecision(2) << finaltotal << endl;
+    }
+optc:
+    char chd;
+    cout << endl << endl << "Do you want to make changes in your cart? (A - add || R - remove || E - return to main menu) ";
+    cin >> chd;
+    if (chd == 'E' || chd == 'e') {
+        cout << "Returning to main menu...";
+        pause(1);
+        return;
+    }
+    else if (chd == 'A' || chd == 'a') {
+        int choice;
+        cout << "Enter the sno of the book you want to add a copy to (or 0 to cancel): ";
+        cin >> choice;
+
+        if (choice < 0 || choice > booksInCart) {
+            cout << "Invalid choice. No copies added to cart." << endl;
+            goto startdisp;
+        }
+
+        if (choice == 0) {
+            cout << "No copies added to cart." << endl;
+            goto startdisp;
+        }
+
+        // Add more copies of the selected book to the cart
+        book* selected = ordered[choice - 1];
+        bool added = false;
+        
+            if (selected->noofavail > 0) {
+                    if (booksInCart >= maxbooks) {
+                        cout << "Cart full, please proceed to checkout." << endl;
+                        goto startdisp;
+                    }
+
+                    total += selected->price;
+                    selected->setordered();
+                    selected->editavail();
+                    added = true;
+            }
+            else {
+                added = false;
+            }
+
+        if (added) {
+            cout << "Added another copy of '" << selected->name << "' to your cart." << endl;
+            pause(1);
+            goto startdisp;
+        }
+        else if (!added) {
+            cout << "No more copies of '" << selected->name << "' available." << endl;
+            goto startdisp;
+        }
+    }
+    else if (chd == 'R' || chd == 'r') {
+        int choice;
+        cout << "Enter the sno of the book you want to remove a copy from (or 0 to cancel): ";
+        cin >> choice;
+
+        if (choice < 0 || choice > booksInCart) {
+            cout << "Invalid choice. No book removed." << endl;
+            return;
+        }
+
+        if (choice == 0) {
+            cout << "No book removed." << endl;
+            return;
+        }
+
+
+        book* removed = ordered[choice - 1];
+            // Update total and book availability
+            removed->resetordered();
+            removed->undoavail();
+            total -= removed->price;
+
+            if (removed->ordered == 0) {
+                // Remove the selected book from the cart
+                for (int i = choice - 1; i < booksInCart - 1; i++) {
+                    ordered[i] = ordered[i + 1];
+                }
+                booksInCart--;
+                cout << "Book '" << removed->name << "' removed from the cart." << endl;
+                pause(1);
+                goto startdisp;
+            }
+            else {
+                cout << "Copy of '" << removed->name << "' removed from the cart." << endl;
+                pause(1);
+                goto startdisp;
+            }
+        
+    }
+    else {
+        cout << "Invalid option, try again" << endl;
+        pause(1);
+        goto optc;
     }
 }
 

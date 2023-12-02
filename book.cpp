@@ -84,8 +84,21 @@ chd:
     }
 }
 
-void book::editavail() { //assuming sold
-    noofavail--;
+void book::editavail() { //assuming copy added to card
+    noofavail = noofavail - 1;
+}
+
+void book::undoavail() { //assuming no of copy decreased
+    noofavail=noofavail+1;
+}
+
+
+void book::setordered() {
+    ordered = ordered + 1;
+}
+
+void book::resetordered() {
+    ordered = ordered - 1;
 }
 
 void book::displayDate(int publishdate) {
@@ -121,11 +134,6 @@ void book::displayorder() {
     cout << endl << "Type: " << (type ? "Paperback" : "Hardback");
     cout << endl << "Price: Rs." << price;
     cout << endl << "No. of copies ordered: " << ordered;
-}
-
-
-void book::setordered() {
-    ordered++;
 }
 
 void book::openreads() {

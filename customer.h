@@ -33,6 +33,7 @@ public:
     void edit();
     void cart(book* b);
     void display();
+    void displayCart();
     void displayOrder();
     void checkout(); //C - checkout
     //void displayQueue(queue<customer> q); //E - display all orders

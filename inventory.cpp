@@ -215,6 +215,12 @@ void inventory::searchauthor(string input, customer& cust) {
         temp = temp->next;
     }
 
+    if (iauthor.head == NULL) {
+        cout << "No book of genre found." << endl;
+        pause(1);
+        return;
+    }
+
 getbookauthor:
     header();
     iauthor.display();
@@ -247,7 +253,12 @@ getbookauthor:
             cout << "Would you like to order the book? (Y/N) ";
             cin >> choice;
             if (choice == 'y' || choice == 'Y') {
-                cust.cart(&(temp2->b));
+                int nob;
+                cout << "How many copies? ";
+                cin >> nob;
+                for (int i = 1; i <= nob; i++) {
+                    cust.cart(&(temp2->b));
+                }
                 pause(1);
             }
             else if (choice == 'N' || choice == 'n') {
@@ -282,6 +293,12 @@ void inventory::searchgenre(string input, customer& cust) {
         temp = temp->next;
     }
 
+    if (igenre.head == NULL) {
+        cout << "No book of genre found." << endl;
+        pause(1);
+        return;
+    }
+
 getbookgenre:
     header();
     igenre.display();
@@ -314,7 +331,12 @@ getbookgenre:
             cout << "Would you like to order the book? (Y/N) ";
             cin >> choice;
             if (choice == 'y' || choice == 'Y') {
-                cust.cart(&(temp2->b));
+                int nob;
+                cout << "How many copies? ";
+                cin >> nob;
+                for (int i = 1; i <= nob; i++) {
+                    cust.cart(&(temp2->b));
+                }
                 pause(1);
             }
             else if (choice == 'N' || choice == 'n') {

@@ -24,6 +24,8 @@ public:
     void editdate();
     void editprice();
     void editavail();
+    void undoavail();
+    void resetordered();
     void setordered();
     void displayDate(int publishdate);
     void display();
