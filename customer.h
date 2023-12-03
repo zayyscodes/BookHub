@@ -37,7 +37,6 @@ public:
     void displayCart();
     void displayOrder();
     void checkout(); //C - checkout
-    //void displayQueue(queue<customer> q); //E - display all orders
     void setinfo(); //C - for taking customer info for order checkout
     void updatestatus();
     bool operator<(const customer& other) const; //for priority queue

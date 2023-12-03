@@ -60,12 +60,13 @@ string arr[maxsize] = { "Due to fluctuation in exchange rates, the prices of the
 const int empnum = 20;
 employee emp[empnum];
 
-void generateebill(customer& cust);
-void generatebill(customer& cust, int billno);
-void announcement();
+void getdaysummary(priority_queue<customer> customerQueue, stack<customer> dispatchedOrder, stack<customer> dispatchorder);
+void generatebill(customer& cust, int billno, string name);
+void announcement(int i);
 
 const int num = 50;
 const int n = 10;
+int nann = 3;
 
 int main() {
     int i = 23;
@@ -88,12 +89,13 @@ logIN:
     cin >> login;
     if (login == 1) {
         customer cust;
+        bool checkedout = false;
     menu:
         header();
         getwod(words, i);
-        announcement();
-        cout << endl << endl << "\n\t\t\t\t\t\tM A I N   M E N U" << "You are recommended to proceed in the order given:";
-        cout << endl << "1, Order\n2, Search Book(s)\n3, Display Sorted\n4, View Cart\n5, Checkout\n6, Check Order Status\n7, Log Out";
+        announcement(nann);
+        cout << endl << endl << "\n\t\t\t\t\t\tM A I N   M E N U" << endl << "You are recommended to proceed in the order given:";
+        cout << endl << "1, Order\n2, Search Book(s)\n3, Display Sorted\n4, View Cart\n5, Checkout\n6, Log Out";
         cout << endl << "Enter Choice: ";
         int choose;
         cin >> choose;
@@ -364,105 +366,51 @@ logIN:
                 goto menu;
             }
             else {
-                cust.setinfo();
-                char yn;
-            opt5:
-                cout << endl << endl << "Are you sure the entered information is correct? (Y/N) ";
-                cin >> yn;
-                if (yn == 'Y' || yn == 'y') {
-                    cout << "Great! Proceeding to checkout." << endl;
-                    customerQueue.push(cust);
-                    cust.updatestatus();
-                    pause(1);
-                    cout << "Order has been added to queue." << endl << "Returning to main menu...";
-                    pause(1);
-                    header();
-                    cust.displayOrder();
-                    cout << endl;
-                    system("pause");
-                    goto menu;
-                }
-                else if (yn == 'N' || yn == 'n') {
-                    cust.edit();
-                    goto opt5;
+                if (!checkedout) {
+                    cust.setinfo();
+                    char yn;
+                opt5:
+                    cout << endl << endl << "Are you sure the entered information is correct? (Y/N) ";
+                    cin >> yn;
+                    if (yn == 'Y' || yn == 'y') {
+                        cout << "Great! Proceeding to checkout." << endl;
+                        customerQueue.push(cust);
+                        cust.updatestatus();
+                        pause(1);
+                        cout << "Order has been added to queue." << endl << "Returning to main menu...";
+                        pause(1);
+                        header();
+                        cust.displayOrder();
+                        cout << endl;
+                        system("pause");
+                        checkedout = true;
+                        goto menu;
+                    }
+                    else if (yn == 'N' || yn == 'n') {
+                        cust.edit();
+                        goto opt5;
+                    }
+                    else {
+                        cout << "Invalid option, try again.";
+                        goto opt5;
+                    }
                 }
                 else {
-                    cout << "Invalid option, try again.";
-                    goto opt5;
-                }
-                break;
-            }
-        }
-        case 6: {
-            header();
-            if (cust.level == 0) {
-                cout << endl << cust.status;
-                cout << "First check out in order to track order." << endl;
-            }
-            else {
-                string id;
-                cout << "\n\t\t\t\t\tT R A C K  O R D E R" << endl;
-                fflush(stdin);
-                cout << "Enter your customer/order ID (Enter E to exit): ";
-                cin.ignore();
-                getline(cin, id);
-                if (id == "E" || id == "e") {
-                    cout << endl << endl << "Returning to main menu...";
+                    cout << "Already checked out. Proceeding back to main menu.";
                     pause(1);
                     goto menu;
                 }
-                priority_queue<customer> copyQueue = customerQueue;
-                bool found = false;
-                while (!copyQueue.empty()) {
-                    customer curr = copyQueue.top();
-                    // Perform your search operations here
-                    if (curr.id == id) {
-                        found = true;
-                        curr.display();
-                        header();
-                        cout << "Status of order: " << curr.status << endl;
-                        char peek;
-                    opt6:
-                        cout << "Do you want to view your cart? (Y/N) " << endl;
-                        cin >> peek;
-                        if (peek == 'y' || peek == 'Y') {
-                            cout << "\n\t\t\t\t\t** D I S P L A Y I N G   C A R T **" << endl << endl;
-                            curr.displayOrder();
-                            cout << endl;
-                            system("pause");
-                            cout << endl << endl << "Returning to main menu...";
-                            pause(1);
-                            goto menu;
-                        }
-                        else if (peek == 'n' || peek == 'N') {
-                            cout << endl << endl << "Returning to main menu...";
-                            pause(1);
-                            goto menu;
-                        }
-                        else {
-                            cout << "Invalid Option, try again." << endl;
-                            goto opt6;
-                        }
-                    }
-                    if (found)
-                        break;
-                    else
-                        copyQueue.pop();
-                }
             }
-            pause(1);
-            goto menu;
             break;
         }
-
-        case 7: {
+        case 6: {
         logout:
             header();
             cout << "Are you sure you want to log out? Your cart will be emptied. (Y/N) ";
             char log;
             cin >> log;
             if (log == 'y' || log == 'Y') {
-                cout << endl << "\n\n\t\t\t\t\t**L O G G I N G   O F F**";
+                cout << endl << "\n\n\t\t\t\t\t **L O G G I N G   O F F**";
                 pause(2);
                 goto logIN;
             }
@@ -559,7 +507,7 @@ logIN:
                 getline(cin, an);
                 cout << endl << endl << "Possible genres:" << endl;
                 for (int x = 0; x < numGenres; x++) {
-                    cout << genres[x].code << " - " << genres[x].name << endl;
+                    cout << genres[x].name << endl;
                 }
                 cout << "Enter Book Genre: ";
                 getline(cin, g);
@@ -653,12 +601,14 @@ logIN:
                     cout << "Are these the correct credentials? (Y/N) ";
                     cin >> choice;
                     if (choice == 'Y' || choice == 'y') {
-                        emp[empi] = employee(name, username, pw);
+                        employee e(name, username, pw);
+                        emp[empi] = e;
                         empi++;
                         pause(1);
                         goto menuemp;
                     }
                     else if (choice == 'N' || choice == 'n') {
+                        header();
                         goto input;
                     }
                 } else if (choice == 'N' || choice == 'n') {
@@ -679,6 +629,8 @@ logIN:
                     priority_queue<customer> copyQueue = customerQueue;
                     while (!copyQueue.empty()) {
                         customer curr = copyQueue.top();
+                        curr.display();
+                        cout << endl;
                         curr.displayOrder();
                         cout << endl;
                         copyQueue.pop(); // Remove the top element
@@ -686,7 +638,7 @@ logIN:
                     char orderch;
                     for (int i = 0; i < customerQueue.size(); i++) {
                     optch:
-                        cout << "Would you like to process the top order? (Y/N) ";
+                        cout << endl << "Would you like to process the top order? (Y/N) ";
                         cin >> orderch;
                         if (orderch == 'Y' || orderch == 'y') {
                             header();
@@ -757,7 +709,7 @@ logIN:
                 break;
             }
             case 5: {
-                cout << endl << "\n\n\t\t\t\t\t\t**L O G G I N G   O F F**";
+                cout << endl << "\n\n\t\t\t\t\t **L O G G I N G   O F F**";
                 pause(2);
                 goto logIN;
                 break;
@@ -781,13 +733,13 @@ void generatebill(customer& cust, int billno, string name) {
     MyFile << "Order ID: " << cust.id << endl;
     MyFile << "Customer Name: " << cust.name << endl << "Customer Phone Number: " << cust.phno << endl << "Customer Address: " << cust.address << ", " << cust.city << endl ;
     MyFile << "User: " << name;
-    MyFile << "Channel: Online" << endl;
+    MyFile << endl << "Channel: Online" << endl;
 
     MyFile << endl << "-----------------------------------------" << endl;
-    MyFile << "\t\t\t**O R D E R**";
+    MyFile << "\t\t  **O R D E R**";
     MyFile << endl << "-----------------------------------------" << endl;
     for (int i = 0; i < cust.booksInCart; i++) {
-        MyFile << i + 1 << ") " << endl;
+        MyFile << i + 1 << ") ";
         MyFile << endl << "Book Name: " << cust.ordered[i]->name;
         if (cust.ordered[i]->special)
             MyFile << " (special edition)";
@@ -817,59 +769,54 @@ void generatebill(customer& cust, int billno, string name) {
 
 void getdaysummary(priority_queue<customer> customerQueue, stack<customer> dispatchedOrder, stack<customer> dispatchorder) {
     ofstream MyFile("DaySummary.txt");
-
-    MyFile << "Queue contents:" << std::endl;
+    double dayincome = 0.00;
+    MyFile << "\t\t\tQueue contents:" << std::endl;
     if (!customerQueue.empty()) {
         while (!customerQueue.empty()) {
             customer cust = customerQueue.top();
             MyFile << "Cust. ID: " << cust.id << endl;
             MyFile << "Name: " << cust.name << endl << "Address: " << cust.address << ", " << cust.city << endl;
             customerQueue.pop();
+            MyFile << endl;
+            dayincome += cust.finaltotal;
         }
     }
     else
         MyFile << "Customer Queue is empty!" << endl;
 
-    MyFile << endl << "Orders processed:" << endl;
+    MyFile << endl << "\t\t\tOrders processed:";
     if (!dispatchorder.empty()) {
         while (!dispatchorder.empty()) {
             customer cust = dispatchorder.top();
             MyFile << "Cust. ID: " << cust.id << endl;
             MyFile << "Name: " << cust.name << endl << "Address: " << cust.address << ", " << cust.city << endl;
             dispatchorder.pop();
+            dayincome += cust.finaltotal;
         }
     }
     else
-        MyFile << endl << "No orders to be dispatched.";
+        MyFile << endl << "No orders to be dispatched." << endl;
     
-    MyFile << "Orders dispatched:" << endl;
+    MyFile << endl << "\t\t\tOrders dispatched:" << endl;
     if (!dispatchedOrder.empty()) {
         while (!dispatchedOrder.empty()) {
             customer cust = dispatchedOrder.top();
             MyFile << "Cust. ID: " << cust.id << endl;
             MyFile << "Name: " << cust.name << endl << "Address: " << cust.address << ", " << cust.city << endl;
             dispatchedOrder.pop();
+            dayincome += cust.finaltotal;
         }
     }
     else
         MyFile << "No orders have been dispatched yet.";
 
+    MyFile << endl << endl << "Total Income for today: Rs." << dayincome;
     MyFile.close();
 }
 
-void announcement() {
-    int arrSize = sizeof(arr) / sizeof(arr[0]);
+void announcement(int i) {
     srand(static_cast<unsigned int>(time(0)));
-    int x = generateRandomNumber(0, arrSize - 1); // Adjust the range to prevent potential out-of-bounds access
+    int x = generateRandomNumber(0, i - 1); // Adjust the range to prevent potential out-of-bounds access
     cout << endl << "\n\t\t\t\t\t   A N N O U N C E M E N T S" << endl;
     cout << arr[x];
-}
-
-void addString(const std::string& newann) {
-    int arrSize = sizeof(arr) / sizeof(arr[0]);
-    if (arrSize >= maxsize) {
-        cout << "Announcement array is full. Cannot add more announcements." << endl;
-        return;
-    }
-    arr[arrSize++] = newann;
 }

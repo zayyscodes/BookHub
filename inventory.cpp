@@ -231,6 +231,11 @@ getbookauthor:
     if (ch == 0) {
         return;
     }
+    else if (ch > iauthor.tail->sno) {
+        cout << "Book doesn't exist." << endl;
+        pause(1);
+        return;
+    }
     else {
         bool flag = false;
         Node* temp2 = iauthor.head;
@@ -307,6 +312,11 @@ getbookgenre:
     cout << endl << endl << "Enter the 'Sno.' to add the book to the cart or review it. (Enter '0' to exit) ";
     cin >> ch;
     if (ch == 0) {
+        return;
+    }
+    else if (ch > igenre.tail->sno) {
+        cout << "Book doesn't exist." << endl;
+        pause(1);
         return;
     }
     else {

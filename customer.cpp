@@ -356,8 +356,8 @@ void customer::displayOrder() {
     if (!paymet) {
         finaltotal = finaltotal - (finaltotal * 0.1);
         cout << endl << "After 'Card Discount': Rs." << fixed << setprecision(2) << finaltotal << endl;
-        disc = total - finaltotal;
-        cout << endl << "Discounted off: Rs." << fixed << setprecision(2) << disc << endl;
+        disc = finaltotal - total;
+        cout << "Discounted off: Rs." << fixed << setprecision(2) << disc << endl;
     }
 }
 
@@ -375,7 +375,7 @@ startdisp:
     cout << endl << "Total after GST: Rs." << fixed << setprecision(2) << finaltotal << endl;
     if (!paymet) {
         finaltotal = finaltotal - (finaltotal * 0.1);
-        cout << endl << "After 'Card Discount' : Rs." << fixed << setprecision(2) << finaltotal << endl;
+        cout << "After 'Card Discount' : Rs." << fixed << setprecision(2) << finaltotal << endl;
     }
 optc:
     char chd;
@@ -493,26 +493,7 @@ void customer::display() {
         cout << "Fast Delivery";
     else
         cout << "Normal Delivery";
-    if (!(booksInCart < 1)) {
-        cout << endl << "Books Ordered: " << endl;
-        displayOrder();
-        cout << endl << "Status: " << status;
-    }
 }
-
-/*void customer::displayQueue(queue<customer> q) {
-    cout << "Customers in the queue:" << endl;
-
-    // Use a temporary queue to hold the elements for display
-    queue<customer> tempQueue = q;
-
-    while (!tempQueue.empty()) {
-        customer cust = tempQueue.front();
-        cust.display();
-        cout << endl << endl;
-        tempQueue.pop();
-    }
-}*/
 
 void customer::setinfo() {
     string name, add, billad, city, ph;
