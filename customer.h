@@ -25,6 +25,7 @@ public:
     int level;
     double total;
     double finaltotal;
+    double disc;
 
     customer();
     customer(string n, string add, string bill, bool pay, string cty, bool type);

@@ -1,6 +1,10 @@
 #include<iostream>
-#include <algorithm>
+#include<algorithm>
 #include<string>
+#include<fstream>
+#include<sstream>
+#include<chrono>
+#include<thread>
 using namespace std;
 
 struct wod {

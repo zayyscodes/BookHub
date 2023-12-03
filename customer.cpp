@@ -19,6 +19,7 @@ const int maxbooks = 12;
 customer::customer() {
     total = 0.00;
     finaltotal = 0.00;
+    disc = 0.00;
     booksInCart = 0;
     level = 0;
     paymet = true;
@@ -31,6 +32,7 @@ customer::customer() {
 customer::customer(string n, string add, string bill, bool pay, string cty, bool type) :name(n), address(add), billad(bill), paymet(pay), city(cty), deltype(type) {
     customer::setID();
     total = 0.00;
+    disc = 0.00;
     finaltotal = 0.00;
     booksInCart = 0;
     level = 0;
@@ -353,7 +355,9 @@ void customer::displayOrder() {
     cout << endl << "Total after GST: Rs." << fixed << setprecision(2) << finaltotal << endl;
     if (!paymet) {
         finaltotal = finaltotal - (finaltotal * 0.1);
-        cout << endl << "After 'Card Discount' : Rs." << fixed << setprecision(2) << finaltotal << endl;
+        cout << endl << "After 'Card Discount': Rs." << fixed << setprecision(2) << finaltotal << endl;
+        disc = total - finaltotal;
+        cout << endl << "Discounted off: Rs." << fixed << setprecision(2) << disc << endl;
     }
 }
 
@@ -406,7 +410,6 @@ optc:
                         cout << "Cart full, please proceed to checkout." << endl;
                         goto startdisp;
                     }
-
                     total += selected->price;
                     selected->setordered();
                     selected->editavail();
@@ -490,16 +493,10 @@ void customer::display() {
         cout << "Fast Delivery";
     else
         cout << "Normal Delivery";
-    if (!(booksInCart < 2)) {
+    if (!(booksInCart < 1)) {
         cout << endl << "Books Ordered: " << endl;
-        for (int i = 0; i < booksInCart; i++) {
-            ordered[i]->display();
-        }
-        cout << endl << "Status: ";
-        if (delivered)
-            cout << "Delivered";
-        else
-            cout << "*order in process*";
+        displayOrder();
+        cout << endl << "Status: " << status;
     }
 }
 
@@ -619,12 +616,13 @@ bool customer::operator<(const customer& other) const {
 void customer::updatestatus() {
     level = level + 1;
     if (level == 1) {
-        status = "Order placed, added to cart.";
+        status = "Order placed, added to queue.";
     }
     else if (level == 2) {
-        status = "Order is being processed.";
+        status = "Order has been processed.";
     }
     else if (level == 3) {
+        delivered = true;
         status = "Order has been dispatched, you will receive it";
         if (deltype) {
             status += " by next week.";
