@@ -301,6 +301,7 @@ void customer::cart(book* newBook) {
 
     if (newBook->noofavail == 0 && !newBook->avail) {
         cout << "Book is currently out of stock." << endl;
+        pause(1);
         return;
     }
 

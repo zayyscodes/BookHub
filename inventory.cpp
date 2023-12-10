@@ -216,7 +216,7 @@ void inventory::searchauthor(string input, customer& cust) {
     }
 
     if (iauthor.head == NULL) {
-        cout << "No book of genre found." << endl;
+        cout << "No book of author found." << endl;
         pause(1);
         return;
     }

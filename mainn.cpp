@@ -505,7 +505,22 @@ logIN:
                 getline(cin, n);
                 cout << "Enter Author's Name: ";
                 getline(cin, an);
-                cout << endl << endl << "Possible genres:" << endl;
+                Node* tempp = i1.head;
+                bool foundd = false;
+                while (tempp->next != NULL) {
+                    if (tempp->b.name == n && tempp->b.authorname == an) {
+                        foundd = true;
+                        break;
+                    }
+                    tempp = tempp->next;
+                } if (foundd) {
+                    cout << endl << "Book already exists." << endl << "Returning to main menu..." << endl;
+                    pause(2);
+                    goto menuemp;
+                }
+                else
+                    ;
+                cout << endl << "Possible genres:" << endl;
                 for (int x = 0; x < numGenres; x++) {
                     cout << genres[x].name << endl;
                 }
@@ -560,6 +575,25 @@ logIN:
                 if (choice == 'y' || choice == 'Y') {
                     cout << endl << "Book has been added to inventory";
                     i1.addbook(book(n, an, g, date, s, type, av, avn, pr, url));
+                    char opti;
+                optii:
+                    cout << endl << "Do you want to view inventory? (Y/N) ";
+                    cin >> opti;
+                    if (opti == 'Y' || opti == 'y') {
+                        cout << endl << "Displaying inventory...";
+                        pause(1);
+                        header();
+                        i1.display();
+                    } else if (opti == 'N' || opti == 'n') {
+                        cout << endl << "Returning to main menu...";
+                        pause(1);
+                        goto menuemp;
+                    }
+                    else {
+                        cout << "Invalid option, try again." << endl;
+                        pause(2);
+                        goto optii;
+                    }
                 }
                 else if (choice == 'n' || choice == 'N') {
                     cout << "Going to beginning again...";
@@ -575,7 +609,9 @@ logIN:
                     cout << "Invalid option, try again." << endl;
                     goto chooseb;
                 }
+                break;
             }
+
             case 2: {
                 header();
             input:
